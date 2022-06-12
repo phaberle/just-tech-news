@@ -1,9 +1,14 @@
 const { Model, DataTypes } = require('sequelize');
 const sequelize = require('../config/connection');
 const { STRING } = require('sequelize');
+const bcrypt = require('bcrypt'); // <-- async function available 
 
 //create our user model
-class User extends Model { }
+class User extends Model {
+    checkPassword(loginPw){
+        return bcrypt.compareSync(loginPw,this.password); // <-- compares plain text password with hash if the pair match from db record, success.
+    }
+ }
 
 //define table columns and configuration
 
@@ -18,7 +23,7 @@ User.init(
             primaryKey: true,
             //turn on auto increment
             autoIncrement: true
-           
+
         },
         //define a username column
         username: {
@@ -47,12 +52,23 @@ User.init(
         }
     },
     {
+        hooks: { // <-- hooks placement to encrypt passwords for create and update of user information
+            //setup beforeCreate lifecycle "hook" functionality for before create and before update
+            async beforeCreate(newUserData) {
+                newUserData.password = await bcrypt.hash(newUserData.password, 10);
+                return newUserData;
+            },
+            async beforeUpdate(updatedUserData) {
+              updatedUserData.password=await bcrypt.hash(updatedUserData.password, 10);
+            }
+        },
         sequelize,
         timestamps: false,
         freezeTableName: true,
         underscored: true,
         modelName: 'user'
     }
+
 );
 
 module.exports = User;
