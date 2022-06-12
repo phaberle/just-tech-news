@@ -52,7 +52,7 @@ User.init(
         }
     },
     {
-        hooks: { // <-- hooks placement to encrypt passwords for create and update of user information
+        hooks: { // <-- hooks placement to encrypt passwords for create and update of user passwords
             //setup beforeCreate lifecycle "hook" functionality for before create and before update
             async beforeCreate(newUserData) {
                 newUserData.password = await bcrypt.hash(newUserData.password, 10);
