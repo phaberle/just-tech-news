@@ -4,6 +4,8 @@ const { Post, User, Comment } = require('../models');
 
 
 router.get('/', (req, res) => {
+    console.log('I have my eye on you!!'); //<-- for dramatic effect
+    console.log(req.session); //<-- logs the user that just logged in
     Post.findAll({
         attributes: [
             'id',
@@ -29,14 +31,23 @@ router.get('/', (req, res) => {
     })
         .then(dbPostData => {
             //pass a single post object int the homepage template
-            console.log(dbPostData[0]);
-            const posts = dbPostData.map(post =>post.get({plain:true}));
-            res.render('homepage', {posts});
+            // console.log(dbPostData[0]); // <-- prints user comments to console.
+            const posts = dbPostData.map(post => post.get({ plain: true }));
+            res.render('homepage', { posts });
         })
         .catch(err => {
             console.log(err);
             res.status(500).json(err);
         });
 });
+
+router.get('/login', (req, res) => {
+    //check for a session and redirect to the homepage if one exists
+    if (req.session.loggedIn) {
+        res.redirect('/');
+        return;
+    }
+    res.render('login');
+})
 
 module.exports = router;
