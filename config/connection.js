@@ -19,7 +19,7 @@ require('dotenv').config();
 
  //local
 //create connection to our database, pass in your MySQL information for username and password
-const sequelize = new Sequalize('just_tech_news_db', 'techUser', '{tzC]h}!]3_8)f"q',{
+const sequelize = new Sequalize('just_tech_news', 'techuser', 'techuser',{
     host:'localhost',
     dialect: 'mysql',
     port: '3306',
