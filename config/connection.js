@@ -4,7 +4,7 @@ require('dotenv').config();
 
 
 //Heroku
-// let sequelize;
+ let sequelize
 if (process.env.JAWSDB_URL) {
     sequalize = new Sequalize(process.env.JAWSDB_URL);
 } else {
